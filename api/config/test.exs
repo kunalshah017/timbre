@@ -6,6 +6,8 @@ config :timbre, Timbre.Repo,
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 5
 
+config :timbre, :recordings_storage_path, Path.expand("../.tmp/test_uploads", __DIR__)
+
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :timbre, TimbreWeb.Endpoint,

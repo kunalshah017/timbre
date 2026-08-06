@@ -48,6 +48,10 @@ if config_env() == :prod do
     journal_mode: :wal,
     busy_timeout: 5_000
 
+  config :timbre,
+         :recordings_storage_path,
+         System.get_env("RECORDINGS_STORAGE_PATH") || "/data/uploads"
+
   config :timbre, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
   config :timbre, TimbreWeb.Endpoint,
