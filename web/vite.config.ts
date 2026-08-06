@@ -20,4 +20,9 @@ export default defineConfig({
       '/healthz': { target: 'http://localhost:4010', changeOrigin: true },
     },
   },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './src/test/setup.ts',
+  },
 })
