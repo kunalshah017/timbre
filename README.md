@@ -1,16 +1,15 @@
 # timbre
 
-A **Phoenix + React + Rust/WASM** scaffold — the starting point for the
-full-stack engineering assignment. You'll be given a feature to build on top of
-it. Using AI tools is expected and allowed — what matters is that you deeply
-understand and can reason about the code you submit.
+A voice-recording workspace built for the full-stack engineering assignment.
+It uses **Phoenix + React + Rust/WASM** and completes Part 1: record from the
+browser, persist locally, play recordings back, rename them, and delete them.
 
 ```
 timbre/
 ├── api/                        Phoenix 1.8 JSON API + SQLite (Ecto) — :4010
-│   └── lib/timbre_web/         controllers (health, hello) + router
+│   └── lib/timbre_web/         JSON controllers, recording domain + router
 ├── web/                        Vite + React 19 + Tailwind 4 — :5173
-│   ├── src/                    App.tsx — status of the API + WASM legs
+│   ├── src/                    recording workspace UI + API client
 │   └── crates/timbre_kit/      Rust → WASM (the DSP seam)
 ├── flake.nix                   pinned toolchain (Elixir, Node, Rust + wasm)
 ├── justfile                    setup / dev / build / test / db-*
@@ -38,8 +37,23 @@ No Nix? Install the toolchain yourself — Elixir 1.18+, Node 22+, Rust via
 [`wasm-pack`](https://rustwasm.github.io/wasm-pack/) and
 [`just`](https://github.com/casey/just) — then run the same `just` commands.
 
-Open http://localhost:5173 — when both status dots turn blue, the full stack
-(Phoenix API + Rust/WASM) is wired.
+Open http://localhost:5173. Allow microphone access, record a clip, then find
+it in the Library to play it back or rename it.
+
+## Recording behavior
+
+- The browser records `audio/webm` where supported and otherwise uses `audio/mp4`.
+- The single recording studio shows a live microphone waveform and input level.
+  You can pause and resume a capture; **Done** saves it immediately, while
+  **Discard** removes only the unsaved capture.
+- The API accepts either format, with a maximum duration of 10 minutes and a
+  maximum upload size of 50 MiB.
+- SQLite holds recording metadata; audio files are stored locally under
+  `api/.tmp/uploads` in development. The `Timbre.Recordings.Storage` boundary
+  keeps this replaceable with object storage later.
+- In production, configure `RECORDINGS_STORAGE_PATH` to a persistent local
+  volume. SQLite plus local files is intentionally a single-instance deployment
+  topology, not a horizontally scaled one.
 
 | Command          | What                                             |
 | ---------------- | ------------------------------------------------ |
